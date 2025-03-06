@@ -3,15 +3,24 @@ from settings import *
 class Player(pg.sprite.Sprite):
     def __init__(self,position:vec2, tilemap):
         super().__init__()
-        self.image = pg.surface.Surface((32,32))
+        self.image = pg.surface.Surface((32,64))
         self.image.fill('red')
         self.position = position
         self.rect = self.image.get_frect(topleft=position)
-        self.move_speed = vec2(5,5)
+
+
+        self.move_speed = vec2(500,500)
         self.input = vec2(0,0)
+        self.gravity = 9
+        self.acceleration = vec2(0,self.gravity)
+        self.JUMP_FORCE = -900
+        self.velocity = vec2(0,0)
+
+
         self.collision_list = []
         self.tilemap = tilemap
-    
+        self.ground = False
+        self.collision_types = {"left": False, "right":False, "bottom": False, "top": False}
     def get_input(self):
         input = vec2()
         keys = pg.key.get_pressed()
@@ -29,18 +38,32 @@ class Player(pg.sprite.Sprite):
     
         return input
 
-    
-
-    def update(self):
-
-        collision_types = {"left": False, "right":False, "bottom": False, "top": False}
+    def is_grounded(self):
+        if self.ground:
+            return True 
+        return False
+    def check_jump(self):
+        keys = pg.key.get_pressed()
+        if keys[pg.K_SPACE] and self.is_grounded():
+            self.acceleration.y = self.JUMP_FORCE
+        else: 
+            self.acceleration.y =self.gravity
+    def update(self,dt):
+        self.check_jump()
+        self.ground = False
 
         input = self.get_input()
-        self.velocity = vec2(0,0)
+        #self.velocity = vec2(0,0)
         self.velocity.x = input.x * self.move_speed.x
-        self.velocity.y = input.y * self.move_speed.y
+        #self.velocity.y = input.y * self.move_speed.y
+        if not(self.collision_types['left'] or self.collision_types['right']) :
 
-        self.position += self.velocity
+            self.velocity.y += self.acceleration.y
+        
+
+        self.collision_types = {"left": False, "right":False, "bottom": False, "top": False}
+
+        self.position += self.velocity * dt
         
         self.rect.x = self.position.x
         self.collision_list = self.tilemap.get_collision_with(self)
@@ -48,25 +71,30 @@ class Player(pg.sprite.Sprite):
         for tile in self.collision_list:
             if self.velocity.x > 0:
                 self.rect.right = tile.rect.left
-                collision_types["right"] = True 
+                self.collision_types["right"] = True 
+                self.acceleration.y =self.gravity/4 * dt
             elif self.velocity.x < 0:
                 self.rect.left = tile.rect.right
-                collision_types['left'] = True
+                self.collision_types['left'] = True
+                self.acceleration.y =self.gravity/4 * dt
 
         self.rect.y = self.position.y
         self.collision_list = self.tilemap.get_collision_with(self)
         for tile in self.collision_list:
             if self.velocity.y > 0:
                 self.rect.bottom = tile.rect.top
-                collision_types["bottom"] = True 
+                self.collision_types["bottom"] = True 
+                self.velocity.y = 0
+                self.ground = True
             elif self.velocity.y < 0:
                 self.rect.top = tile.rect.bottom
-                collision_types['top'] = True
+                self.collision_types['top'] = True
+                self.velocity.y = 0
 
         
 
         #self.rect.topleft = self.position
         self.position = self.rect.topleft
-        print(collision_types)
+        
 
 
