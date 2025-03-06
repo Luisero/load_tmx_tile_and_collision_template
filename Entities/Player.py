@@ -9,11 +9,11 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_frect(topleft=position)
 
 
-        self.move_speed = vec2(500,500)
+        self.move_speed = vec2(5,5)
         self.input = vec2(0,0)
-        self.gravity = 9
+        self.gravity = 2
         self.acceleration = vec2(0,self.gravity)
-        self.JUMP_FORCE = -900
+        self.JUMP_FORCE = -30
         self.velocity = vec2(0,0)
 
 
@@ -45,7 +45,7 @@ class Player(pg.sprite.Sprite):
     def check_jump(self):
         keys = pg.key.get_pressed()
         if keys[pg.K_SPACE] and self.is_grounded():
-            self.acceleration.y = self.JUMP_FORCE
+            self.velocity.y = self.JUMP_FORCE
         else: 
             self.acceleration.y =self.gravity
     def update(self,dt):
@@ -58,12 +58,12 @@ class Player(pg.sprite.Sprite):
         #self.velocity.y = input.y * self.move_speed.y
         if not(self.collision_types['left'] or self.collision_types['right']) :
 
-            self.velocity.y += self.acceleration.y
+            self.velocity.y += self.acceleration.y * dt
         
 
         self.collision_types = {"left": False, "right":False, "bottom": False, "top": False}
 
-        self.position += self.velocity * dt
+        self.position += self.velocity * dt 
         
         self.rect.x = self.position.x
         self.collision_list = self.tilemap.get_collision_with(self)
@@ -72,11 +72,11 @@ class Player(pg.sprite.Sprite):
             if self.velocity.x > 0:
                 self.rect.right = tile.rect.left
                 self.collision_types["right"] = True 
-                self.acceleration.y =self.gravity/4 * dt
+                self.acceleration.y =self.gravity/4 * dt 
             elif self.velocity.x < 0:
                 self.rect.left = tile.rect.right
                 self.collision_types['left'] = True
-                self.acceleration.y =self.gravity/4 * dt
+                self.acceleration.y =self.gravity/4 * dt 
 
         self.rect.y = self.position.y
         self.collision_list = self.tilemap.get_collision_with(self)

@@ -17,6 +17,8 @@ class Game:
 
         self.prev_time = time.time()
         self.dt = 0
+        self.target_fps = TARGET_FPS
+        self.fps = FPS
         self.player = Player(vec2(30,200), self.tilemap)
         self.entities_group.add(self.player)
 
@@ -28,13 +30,19 @@ class Game:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.exit()
+            
+        #FPS = 60
+        self.fps = 60
         self.keys = pg.key.get_pressed()
         if self.keys[pg.K_ESCAPE]:
             self.exit()
-
+        if self.keys[pg.K_g]:
+            self.fps = 30
+        
     def update(self):
         now= time.time()
         self.dt = now - self.prev_time
+        self.dt *= self.target_fps
         self.prev_time = now
         self.entities_group.update(self.dt)
         
@@ -54,7 +62,7 @@ class Game:
             self.draw()
             self.check_events()
 
-            self.clock.tick(FPS)
+            self.clock.tick(self.fps)
             pg.display.update()
 
 if __name__ == '__main__':
