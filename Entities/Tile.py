@@ -11,7 +11,7 @@ class Tile(pg.sprite.Sprite):
         self.type = 'Tile'
         
         
-        self.rect = self.image.get_rect(topleft =self.position)
+        self.rect = self.image.get_frect(topleft =self.position)
         
 
         

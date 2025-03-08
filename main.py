@@ -3,6 +3,7 @@ import time
 from Entities.Tilemap import Tilemap
 from Entities.Player import Player
 from Entities.Camera import Camera
+
 class Game:
     def __init__(self):
         pg.init()
@@ -42,7 +43,7 @@ class Game:
             self.fps = 30
         
     def update(self):
-        now= time.time()
+        now = time.time()
         self.dt = now - self.prev_time
         self.dt *= self.target_fps
         self.prev_time = now
@@ -51,12 +52,15 @@ class Game:
         
     def draw(self):
         self.screen.fill(BG_COLOR)
-        #self.tilemap.draw(self.screen)
-        #self.entities_group.draw(self.screen)
         self.camera.custom_draw(self.screen)
+
         # Exibir FPS na tela
         fps_text = self.font.render(f"FPS: {int(self.clock.get_fps())}", True, (255, 255, 255))
         self.screen.blit(fps_text, (10, 10))
+
+        # Exibir posição do scroll da câmera
+        scroll_text = self.font.render(f"Scroll: {self.camera.scroll}", True, (255, 255, 255))
+        self.screen.blit(scroll_text, (10, 50))
         
     def run(self):
         self.runnig = True 
