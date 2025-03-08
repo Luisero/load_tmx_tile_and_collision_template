@@ -1,6 +1,6 @@
 import pygame as pg
 import math
-
+from settings import *
 class Tile(pg.sprite.Sprite):
     def __init__(self,position, surface, group) -> None:
         super().__init__(group)
@@ -15,7 +15,9 @@ class Tile(pg.sprite.Sprite):
         
 
         
-    
+    def draw(self, surface:pg.Surface, scroll=vec2(0,0)):
+        surface.blit(self.image,self.rect.topleft-scroll)
+        
 
     def update(self):
        

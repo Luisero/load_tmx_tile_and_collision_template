@@ -2,7 +2,7 @@ from settings import *
 import time
 from Entities.Tilemap import Tilemap
 from Entities.Player import Player
-
+from Entities.Camera import Camera
 class Game:
     def __init__(self):
         pg.init()
@@ -10,8 +10,9 @@ class Game:
         self.clock = pg.time.Clock()
         self.font = pg.font.Font(None, 36)  # Fonte para exibir o FPS
 
-        self.tilemap = Tilemap('./Data/Levels/1.tmx', vec2(0,-255))
-        
+        self.camera = Camera()
+        self.tilemap = Tilemap('./Data/Levels/1.tmx', vec2(0,-355))
+        self.camera.add(self.tilemap.sprites())
         self.entities_group = pg.sprite.Group()
         self.tilemap.load_tiles()
 
@@ -20,6 +21,7 @@ class Game:
         self.target_fps = TARGET_FPS
         self.fps = FPS
         self.player = Player(vec2(30,200), self.tilemap)
+        self.camera.add(self.player)
         self.entities_group.add(self.player)
 
     def exit(self):
@@ -45,12 +47,13 @@ class Game:
         self.dt *= self.target_fps
         self.prev_time = now
         self.entities_group.update(self.dt)
+        self.camera.update_scroll(self.player.rect)
         
     def draw(self):
         self.screen.fill(BG_COLOR)
-        self.tilemap.draw(self.screen)
-        self.entities_group.draw(self.screen)
-
+        #self.tilemap.draw(self.screen)
+        #self.entities_group.draw(self.screen)
+        self.camera.custom_draw(self.screen)
         # Exibir FPS na tela
         fps_text = self.font.render(f"FPS: {int(self.clock.get_fps())}", True, (255, 255, 255))
         self.screen.blit(fps_text, (10, 10))
