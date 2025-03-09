@@ -24,7 +24,8 @@ class Tilemap(pg.sprite.Group):
                     collider = attributes.get('collide', False)  # Evita KeyError
 
                     if image and collider:
-                        image = pg.transform.scale(image, TILE_SIZE).convert()
+
+                        image = pg.transform.scale(image, TILE_SIZE).convert_alpha()
                         tile = Tile(position=position, surface=image, group=self)
 
                         

@@ -2,7 +2,7 @@ import pygame as pg
 import math
 from settings import *
 class Tile(pg.sprite.Sprite):
-    def __init__(self,position, surface, group) -> None:
+    def __init__(self,position, surface:pg.Surface, group) -> None:
         super().__init__(group)
         self.image = surface
         #self.original_position = [position[0], position[1]]
