@@ -68,6 +68,10 @@ class Game:
             self.check_events()
             self.update()
             self.draw()
+            
+
+            
+
 
             self.clock.tick(self.fps)
             pg.display.update()

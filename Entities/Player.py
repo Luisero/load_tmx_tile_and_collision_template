@@ -1,9 +1,9 @@
 from settings import *
-
+from Entities.Animation import Animation
 class Player(pg.sprite.Sprite):
     def __init__(self,position:vec2, tilemap):
         super().__init__()
-        self.image = pg.surface.Surface((32,64))
+        self.image = pg.surface.Surface((48,48))
         self.image.fill('red')
         self.position = position
         self.rect = self.image.get_frect(topleft=position)
@@ -21,6 +21,8 @@ class Player(pg.sprite.Sprite):
         self.tilemap = tilemap
         self.ground = False
         self.collision_types = {"left": False, "right":False, "bottom": False, "top": False}
+        self.animation = Animation('Data/Levels/player/idle.tmx',self.position,True,self.image.get_size(),0.05)
+        self.anim_flip = False
     def get_input(self):
         input = vec2()
         keys = pg.key.get_pressed()
@@ -61,6 +63,7 @@ class Player(pg.sprite.Sprite):
                 self.rect.left = tile.rect.right
                 self.collision_types['left'] = True
                 
+                
                             
 
     def manage_collision_y(self):
@@ -100,14 +103,23 @@ class Player(pg.sprite.Sprite):
         self.collision_list = self.tilemap.get_collision_with(self)
         self.manage_collision_y()
         
-
+        if self.velocity.x < 0:
+            self.anim_flip = True 
+        elif self.velocity.x == 0 and self.anim_flip == True:
+            self.anim_flip = True 
+        elif self.velocity.x >0:
+            self.anim_flip = False
+        
+        self.animation.play(self.anim_flip)
         
 
         #self.rect.topleft = self.position
         self.position = vec2(self.rect.topleft)
-        print(f'x: {self.position.x} y: {self.position.y}')
+        
         
 
 
     def draw(self, surface:pg.Surface, scroll=vec2(0,0)):
-            surface.blit(self.image,self.rect.topleft-scroll)
+            #surface.blit(self.image,self.rect.topleft-scroll)
+            self.animation.draw(surface,self.rect.topleft-scroll)
+            

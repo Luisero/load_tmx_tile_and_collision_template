@@ -36,7 +36,7 @@ class Tilemap(pg.sprite.Group):
         # Ajuste da posição Y (compensação da origem do Tiled)
         player_x = (object.x + self.initial_pos.x) / self.tmx_data.tilewidth
         player_y = (object.y + self.initial_pos.y) / self.tmx_data.tileheight
-        print(player_x)
+        
         player = Player(vec2(player_x* TILE_SIZE[0], player_y*TILE_SIZE[1]), self)
         camera_group.add(player)
         return player
