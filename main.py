@@ -12,7 +12,7 @@ class Game:
         self.font = pg.font.Font(None, 36)  # Fonte para exibir o FPS
 
         self.camera = Camera()
-        self.tilemap = Tilemap('./Data/Levels/1.tmx', vec2(0,-355))
+        self.tilemap = Tilemap('./Data/Levels/1.tmx')
         self.camera.add(self.tilemap.sprites())
         self.entities_group = pg.sprite.Group()
         self.tilemap.load_tiles()
@@ -21,7 +21,7 @@ class Game:
         self.dt = 0
         self.target_fps = TARGET_FPS
         self.fps = FPS
-        self.player = Player(vec2(30,200), self.tilemap)
+        self.player = self.tilemap.add_player(self.camera)
         self.camera.add(self.player)
         self.entities_group.add(self.player)
 

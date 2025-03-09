@@ -3,7 +3,7 @@ from settings import *
 class Camera(pg.sprite.Group):
     def __init__(self):
         super().__init__()
-        self.scroll = vec2(0,0)
+        self.scroll = vec2(-462,1433)
     
 
     def update_scroll(self, rect:pg.Rect):

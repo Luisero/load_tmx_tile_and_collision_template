@@ -55,14 +55,13 @@ class Player(pg.sprite.Sprite):
             if self.velocity.x > 0:
                 self.rect.right = tile.rect.left
                 self.collision_types["right"] = True 
-                if self.velocity.y < 0 and not self.is_grounded():
-                    self.acceleration.y = self.gravity/1.2
+                
                 
             elif self.velocity.x < 0 :
                 self.rect.left = tile.rect.right
                 self.collision_types['left'] = True
-                if self.velocity.y < 0 and not self.is_grounded():
-                    self.acceleration.y =self.gravity/2
+                
+                            
 
     def manage_collision_y(self):
         for tile in self.collision_list:
@@ -86,9 +85,7 @@ class Player(pg.sprite.Sprite):
         #self.velocity = vec2(0,0)
         self.velocity.x = input.x * self.move_speed.x
         #self.velocity.y = input.y * self.move_speed.y
-        if not(self.collision_types['left'] or self.collision_types['right']) :
-
-            self.velocity.y += self.acceleration.y * dt
+        self.velocity.y += self.acceleration.y * dt
         
 
         self.collision_types = {"left": False, "right":False, "bottom": False, "top": False}
@@ -107,7 +104,8 @@ class Player(pg.sprite.Sprite):
         
 
         #self.rect.topleft = self.position
-        self.position = self.rect.topleft
+        self.position = vec2(self.rect.topleft)
+        print(f'x: {self.position.x} y: {self.position.y}')
         
 
 
