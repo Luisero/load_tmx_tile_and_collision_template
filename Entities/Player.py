@@ -48,6 +48,35 @@ class Player(pg.sprite.Sprite):
             self.velocity.y = self.JUMP_FORCE
         else: 
             self.acceleration.y =self.gravity
+
+    def manage_collision_x(self):
+
+        for tile in self.collision_list:
+            if self.velocity.x > 0:
+                self.rect.right = tile.rect.left
+                self.collision_types["right"] = True 
+                if self.velocity.y < 0 and not self.is_grounded():
+                    self.acceleration.y = self.gravity/1.2
+                
+            elif self.velocity.x < 0 :
+                self.rect.left = tile.rect.right
+                self.collision_types['left'] = True
+                if self.velocity.y < 0 and not self.is_grounded():
+                    self.acceleration.y =self.gravity/2
+
+    def manage_collision_y(self):
+        for tile in self.collision_list:
+            if self.velocity.y > 0:
+                self.rect.bottom = tile.rect.top
+                self.collision_types["bottom"] = True 
+                
+                self.velocity.y = 0
+                self.ground = True
+            elif self.velocity.y < 0:
+                self.rect.top = tile.rect.bottom
+                self.collision_types['top'] = True
+                self.velocity.y = 0
+
     def update(self,dt):
         self.check_jump()
         #self.acceleration.y *=dt
@@ -69,32 +98,11 @@ class Player(pg.sprite.Sprite):
         self.rect.x = self.position.x
         self.collision_list = self.tilemap.get_collision_with(self)
 
-        for tile in self.collision_list:
-            if self.velocity.x > 0:
-                self.rect.right = tile.rect.left
-                self.collision_types["right"] = True 
-                if self.velocity.y < 0 and not self.is_grounded():
-                    self.acceleration.y = self.gravity/1.2
-                
-            elif self.velocity.x < 0 :
-                self.rect.left = tile.rect.right
-                self.collision_types['left'] = True
-                if self.velocity.y < 0 and not self.is_grounded():
-                    self.acceleration.y =self.gravity/2
-
+        self.manage_collision_x()
         self.rect.y = self.position.y
         self.collision_list = self.tilemap.get_collision_with(self)
-        for tile in self.collision_list:
-            if self.velocity.y > 0:
-                self.rect.bottom = tile.rect.top
-                self.collision_types["bottom"] = True 
-                
-                self.velocity.y = 0
-                self.ground = True
-            elif self.velocity.y < 0:
-                self.rect.top = tile.rect.bottom
-                self.collision_types['top'] = True
-                self.velocity.y = 0
+        self.manage_collision_y()
+        
 
         
 

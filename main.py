@@ -7,7 +7,7 @@ from Entities.Camera import Camera
 class Game:
     def __init__(self):
         pg.init()
-        self.screen = pg.display.set_mode(SCREEN_SIZE, pg.FULLSCREEN)
+        self.screen = pg.display.set_mode(SCREEN_SIZE, pg.FULLSCREEN,vsync=True)
         self.clock = pg.time.Clock()
         self.font = pg.font.Font(None, 36)  # Fonte para exibir o FPS
 
@@ -65,9 +65,9 @@ class Game:
     def run(self):
         self.runnig = True 
         while self.runnig:
+            self.check_events()
             self.update()
             self.draw()
-            self.check_events()
 
             self.clock.tick(self.fps)
             pg.display.update()
